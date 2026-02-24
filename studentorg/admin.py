@@ -9,7 +9,7 @@ from .models import College, Program, Organization, Student, OrgMember
 class CollegeAdmin(admin.ModelAdmin):
     list_display = ("college_name", "created_at", "updated_at")
     search_fields = ("college_name",)
-    list_filter = ("created_at",)   # 👈 ADD THIS LINE
+    list_filter = ("created_at",)
 
 
 # -------------------------
@@ -18,7 +18,7 @@ class CollegeAdmin(admin.ModelAdmin):
 @admin.register(Program)
 class ProgramAdmin(admin.ModelAdmin):
     list_display = ("prog_name", "college", "created_at")
-    search_fields = ("prog_name", "college__college_name")  # 👈 MODIFY THIS
+    search_fields = ("prog_name", "college__college_name")
     list_filter = ("college",)
 
 
@@ -27,8 +27,8 @@ class ProgramAdmin(admin.ModelAdmin):
 # -------------------------
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ("name", "college", "description", "created_at")  # 👈 ADD description
-    search_fields = ("name", "description")  # 👈 MODIFY THIS
+    list_display = ("name", "college", "description", "created_at")
+    search_fields = ("name", "description")
     list_filter = ("college",)
 
 
