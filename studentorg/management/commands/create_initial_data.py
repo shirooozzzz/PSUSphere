@@ -7,16 +7,21 @@ class Command(BaseCommand):
     help = 'Create initial data for the application'
 
     def handle(self, *args, **kwargs):
-        # Clear old data first (fresh start)
+        # 🔥 Clear existing data first (to prevent duplicates)
+        self.stdout.write("Deleting existing data...")
+
         OrgMember.objects.all().delete()
         Student.objects.all().delete()
         Organization.objects.all().delete()
 
-        self.stdout.write(self.style.WARNING('Old data deleted.'))
+        self.stdout.write(self.style.WARNING("Old data deleted successfully."))
 
+        # Create fresh data
         self.create_organization(10)
         self.create_students(50)
         self.create_membership(10)
+
+        self.stdout.write(self.style.SUCCESS("All initial data created successfully."))
 
     def create_organization(self, count):
         fake = Faker()
@@ -32,22 +37,16 @@ class Command(BaseCommand):
             )
 
         self.stdout.write(self.style.SUCCESS(
-            'Initial data for organization created successfully.'
-        ))
+            'Initial data for organization created successfully.'))
 
     def create_students(self, count):
         fake = Faker('en_PH')
 
-        programs = Program.objects.all()
-        if not programs.exists():
-            self.stdout.write(self.style.WARNING(
-                'No programs found. Please create programs first.'
-            ))
-            return
-
         for _ in range(count):
             Student.objects.create(
-                student_id=f"{fake.random_int(2020,2025)}-{fake.random_int(1,8)}-{fake.random_number(digits=4)}",
+                student_id=f"{fake.random_int(2020, 2025)}-"
+                           f"{fake.random_int(1, 8)}-"
+                           f"{fake.random_number(digits=4)}",
                 lastname=fake.last_name(),
                 firstname=fake.first_name(),
                 middlename=fake.last_name(),
@@ -55,31 +54,19 @@ class Command(BaseCommand):
             )
 
         self.stdout.write(self.style.SUCCESS(
-            'Initial data for students created successfully.'
-        ))
+            'Initial data for students created successfully.'))
 
     def create_membership(self, count):
         fake = Faker()
-
-        students = Student.objects.all()
-        organizations = Organization.objects.all()
-
-        if not students.exists() or not organizations.exists():
-            self.stdout.write(self.style.WARNING(
-                'Students or Organizations missing. Skipping memberships.'
-            ))
-            return
 
         for _ in range(count):
             OrgMember.objects.create(
                 student=Student.objects.order_by('?').first(),
                 organization=Organization.objects.order_by('?').first(),
                 date_joined=fake.date_between(
-                    start_date="-2y",
-                    end_date="today"
+                    start_date="-2y", end_date="today"
                 )
             )
 
         self.stdout.write(self.style.SUCCESS(
-            'Initial data for student organization created successfully.'
-        ))
+            'Initial data for student organization created successfully.'))
