@@ -4,24 +4,24 @@ from studentorg.models import College, Program, Organization, Student, OrgMember
 
 
 class Command(BaseCommand):
-    help = 'Create initial data for the application'
+    help = 'Create initial data for the application (only if none exists)'
 
     def handle(self, *args, **kwargs):
-        # 🔥 Clear existing data first (to prevent duplicates)
-        self.stdout.write("Deleting existing data...")
 
-        OrgMember.objects.all().delete()
-        Student.objects.all().delete()
-        Organization.objects.all().delete()
+        # ✅ Check if data already exists
+        if Student.objects.exists() or Organization.objects.exists():
+            self.stdout.write(
+                self.style.WARNING("Initial data already exists. Skipping creation.")
+            )
+            return
 
-        self.stdout.write(self.style.WARNING("Old data deleted successfully."))
-
-        # Create fresh data
         self.create_organization(10)
         self.create_students(50)
         self.create_membership(10)
 
-        self.stdout.write(self.style.SUCCESS("All initial data created successfully."))
+        self.stdout.write(
+            self.style.SUCCESS("Initial data created successfully.")
+        )
 
     def create_organization(self, count):
         fake = Faker()
@@ -37,7 +37,8 @@ class Command(BaseCommand):
             )
 
         self.stdout.write(self.style.SUCCESS(
-            'Initial data for organization created successfully.'))
+            'Organizations created successfully.'
+        ))
 
     def create_students(self, count):
         fake = Faker('en_PH')
@@ -54,7 +55,8 @@ class Command(BaseCommand):
             )
 
         self.stdout.write(self.style.SUCCESS(
-            'Initial data for students created successfully.'))
+            'Students created successfully.'
+        ))
 
     def create_membership(self, count):
         fake = Faker()
@@ -69,4 +71,5 @@ class Command(BaseCommand):
             )
 
         self.stdout.write(self.style.SUCCESS(
-            'Initial data for student organization created successfully.'))
+            'Memberships created successfully.'
+        ))
