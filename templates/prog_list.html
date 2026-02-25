@@ -9,7 +9,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">List of Colleges</div>
+                        <div class="card-title">List of Program</div>
                         <div class="card-category">Page Subtitle</div>
                     </div>
                     <br />
@@ -28,8 +28,8 @@
                             </div>                 
                         <div class="col-md-6">
                             <div class="pull-right">
-                                <a href="{% url 'college-add' %}" class="btn btn-success btn-rounded">
-                                    Add College
+                                <a href="{% url 'program-add' %}" class="btn btn-success btn-rounded">
+                                    Add Program
                                 </a>
                             </div>
                         </div>
@@ -39,16 +39,18 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Name</th>
+                                    <th scope="col">College</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for object in object_list %}
                                 <tr>
-                                    <td>{{ object.college_name }}</td>
+                                    <td>{{ object.prog_name }}</td>
+                                    <td>{{ object.college }}</td>
                                     <td>
-                                        <a href="college_list/{{ object.id }}">Edit</a>
-                                        <a href="college_list/{{ object.id }}/delete" class="text-danger">Delete</a>
+                                        <a href="prog_list/{{ object.id }}">Edit</a>
+                                        <a href="prog_list/{{ object.id }}/delete" class="text-danger">Delete</a>
                                     </td>
                                 </tr>
                                 {% empty %}

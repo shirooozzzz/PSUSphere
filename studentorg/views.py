@@ -5,6 +5,10 @@ from studentorg.models import Organization
 from studentorg.forms import OrganizationForm
 from studentorg.models import College
 from studentorg.forms import CollegeForm
+from studentorg.models import Student
+from studentorg.forms import StudentForm
+from studentorg.models import Program
+from studentorg.forms import ProgramForm
 from django.urls import reverse_lazy
 
 
@@ -60,3 +64,62 @@ class CollegeDeleteView(DeleteView):
     model = College
     template_name = 'college_del.html'
     success_url = reverse_lazy('college-list')
+
+class StudentList(ListView):
+    model = Student
+    template_name = 'student_list.html'
+    paginate_by = 5
+
+
+class StudentCreateView(CreateView):
+    model = Student
+    form_class = StudentForm
+    template_name = 'student_form.html'
+    success_url = reverse_lazy('student-list')
+
+
+class StudentUpdateView(UpdateView):
+    model = Student
+    form_class = StudentForm
+    template_name = 'student_form.html'
+    success_url = reverse_lazy('student-list')
+
+
+class StudentDeleteView(DeleteView):
+    model = Student
+    template_name = 'student_del.html'
+    success_url = reverse_lazy('student-list')
+
+class ProgramList(ListView):
+    model = Program
+    template_name = 'prog_list.html'
+    paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        qs = Program.objects.select_related('college')
+
+        if query:
+            qs = qs.filter(prog_name__icontains=query)
+
+        return qs
+
+
+class ProgramCreateView(CreateView):
+    model = Program
+    form_class = ProgramForm
+    template_name = 'prog_form.html'
+    success_url = reverse_lazy('program-list')
+
+
+class ProgramUpdateView(UpdateView):
+    model = Program
+    form_class = ProgramForm
+    template_name = 'prog_form.html'
+    success_url = reverse_lazy('program-list')
+
+
+class ProgramDeleteView(DeleteView):
+    model = Program
+    template_name = 'prog_del.html'
+    success_url = reverse_lazy('program-list')
