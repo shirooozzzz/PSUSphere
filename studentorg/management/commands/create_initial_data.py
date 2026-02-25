@@ -8,10 +8,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
 
-        # ✅ Check if data already exists
-        if Student.objects.exists() or Organization.objects.exists():
+        if not College.objects.exists() or not Program.objects.exists():
             self.stdout.write(
-                self.style.WARNING("Initial data already exists. Skipping creation.")
+                self.style.ERROR("College and Program must exist first.")
             )
             return
 
