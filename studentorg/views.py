@@ -9,7 +9,10 @@ from studentorg.models import Student
 from studentorg.forms import StudentForm
 from studentorg.models import Program
 from studentorg.forms import ProgramForm
+from studentorg.models import OrgMember
+from studentorg.forms import OrgMemberForm
 from django.urls import reverse_lazy
+from django.db.models import Q
 
 
 class HomePageView(ListView):
@@ -123,3 +126,40 @@ class ProgramDeleteView(DeleteView):
     model = Program
     template_name = 'prog_del.html'
     success_url = reverse_lazy('program-list')
+
+class OrgMemberList(ListView):
+    model = OrgMember
+    template_name = 'orgmember_list.html'
+    context_object_name = 'object_list'
+    paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+
+        if query:
+            return OrgMember.objects.filter(
+                Q(student__lastname__icontains=query) |
+                Q(student__firstname__icontains=query) |
+                Q(organization__name__icontains=query)
+            )
+        return OrgMember.objects.all()
+
+
+class OrgMemberCreateView(CreateView):
+    model = OrgMember
+    form_class = OrgMemberForm
+    template_name = 'orgmember_form.html'
+    success_url = reverse_lazy('orgmember-list')
+
+
+class OrgMemberUpdateView(UpdateView):
+    model = OrgMember
+    form_class = OrgMemberForm
+    template_name = 'orgmember_form.html'
+    success_url = reverse_lazy('orgmember-list')
+
+
+class OrgMemberDeleteView(DeleteView):
+    model = OrgMember
+    template_name = 'orgmember_del.html'
+    success_url = reverse_lazy('orgmember-list')
