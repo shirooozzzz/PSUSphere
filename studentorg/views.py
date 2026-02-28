@@ -127,6 +127,18 @@ class ProgramList(ListView):
     template_name = 'prog_list.html'
     paginate_by = 5
 
+    def get_queryset(self):
+        qs = super().get_queryset().select_related('college')
+        query = self.request.GET.get('q')
+
+        if query:
+            qs = qs.filter(
+                Q(prog_name__icontains=query) |
+                Q(college__college_name__icontains=query)
+            )
+
+        return qs
+
     def get_ordering(self):
         allowed = ["prog_name", "college__college_name"]
         sort_by = self.request.GET.get("sort_by")
@@ -135,15 +147,6 @@ class ProgramList(ListView):
             return sort_by
 
         return "prog_name"
-
-    def get_queryset(self):
-        query = self.request.GET.get('q')
-        qs = Program.objects.select_related('college')
-
-        if query:
-            qs = qs.filter(prog_name__icontains=query)
-
-        return qs
 
 
 class ProgramCreateView(CreateView):
