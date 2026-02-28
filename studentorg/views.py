@@ -27,15 +27,15 @@ class OrganizationList(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-    qs = super().get_queryset()
-    query = self.request.GET.get('q')
+        qs = super().get_queryset()
+        query = self.request.GET.get('q')
 
-    if query:
-        qs = qs.filter(
-            Q(name__icontains=query) |
-            Q(description__icontains=query)
-        )
-    return qs
+        if query:
+            qs = qs.filter(
+                Q(name__icontains=query) |
+                Q(description__icontains=query)
+            )
+        return qs
 
 class OrganizationCreateView(CreateView):
     model = Organization
