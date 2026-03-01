@@ -175,15 +175,18 @@ class OrgMemberList(ListView):
     paginate_by = 5
 
     def get_queryset(self):
+        qs = super().get_queryset().select_related('student')
         query = self.request.GET.get('q')
 
         if query:
-            return OrgMember.objects.filter(
+            qs = qs.filter(
                 Q(student__lastname__icontains=query) |
                 Q(student__firstname__icontains=query) |
+                Q(student__student_id__icontains=query) |
                 Q(organization__name__icontains=query)
             )
-        return OrgMember.objects.all()
+
+        return qs
 
 
 class OrgMemberCreateView(CreateView):
