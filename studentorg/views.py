@@ -78,6 +78,17 @@ class CollegeList(ListView):
     template_name = 'college_list.html'
     paginate_by = 5
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        query = self.request.GET.get('q', '').strip()
+
+        if query:
+            qs = qs.filter(
+                Q(college_name__icontains=query)
+            )
+
+        return qs
+
 class CollegeCreateView(CreateView):
     model = College
     form_class = CollegeForm
@@ -102,6 +113,25 @@ class StudentList(ListView):
     template_name = 'student_list.html'
     paginate_by = 5
 
+    def get_queryset(self):
+        qs = super().get_queryset().select_related(
+            'program',
+            'program__college'
+        )
+
+        query = self.request.GET.get('q')
+
+        if query:
+            qs = qs.filter(
+                Q(student_id__icontains=query) |
+                Q(lastname__icontains=query) |
+                Q(firstname__icontains=query) |
+                Q(middlename__icontains=query) |
+                Q(program__prog_name__icontains=query) |
+                Q(program__college__college_name__icontains=query)
+            )
+
+        return qs
 
 class StudentCreateView(CreateView):
     model = Student
