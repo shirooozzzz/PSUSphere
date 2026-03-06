@@ -95,9 +95,6 @@ TEMPLATES = [
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 
-# Where collectstatic will gather static files for production
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
 # Additional locations of static files (for development)
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -154,6 +151,12 @@ ACCOUNT_SIGNUP_FIELDS = [
     "password2*",
 ]
 
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
