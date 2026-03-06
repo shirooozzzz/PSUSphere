@@ -56,7 +56,7 @@ INSTALLED_APPS = [
 
 ]
 
-SITE_ID = 5
+SITE_ID = 6
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
