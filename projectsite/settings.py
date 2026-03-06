@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+import socket
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,6 +31,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'shirooozzzz.pythonanywhere.com',
+    'psusphere.pythonanywhere.com',
 ]
 
 
@@ -56,7 +58,10 @@ INSTALLED_APPS = [
 
 ]
 
-SITE_ID = 6
+if "pythonanywhere" in socket.gethostname():
+    SITE_ID = 7 # production site (psusphere.pythonanywhere.com)
+else:
+    SITE_ID = 6 # local site (127.0.0.1:8000)
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
